@@ -1142,10 +1142,10 @@ public void GiveWeaponMenu(int client) {
     }
     AddMenuOption(menu,"rifle","Rifle");
     if (GetConVarInt(g_h_sm_retakes_weapon_awp_team_max) > 0) {
-        AddMenuOption(menu, "awp", "Receive AWP: %s", BOOLSTRING(g_hAwpChoiceCookie));
+        AddMenuOption(menu, "awp", "Receive AWP: %s", BOOLSTRING(g_AwpChoice[client]));
     }
     if (GetConVarInt(g_h_sm_retakes_weapon_scout_team_max) > 0) {
-        AddMenuOption(menu, "scout", "Receive scout: %s", BOOLSTRING(g_hScoutChoiceCookie));
+        AddMenuOption(menu, "scout", "Receive scout: %s", BOOLSTRING(g_ScoutChoice[client]));
     }
     DisplayMenu(menu, client, MENU_TIME_LENGTH);
 }
