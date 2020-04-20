@@ -992,7 +992,7 @@ public int MenuHandler_SCOUT(Handle menu, MenuAction action, int param1, int par
 }
 
 public void GiveWeaponMenu(int client) {
-    Handle menu = CreateMenu(MenuHandler_SCOUT);
+    Handle menu = CreateMenu(MenuHandler_WEAPON);
     SetMenuTitle(menu, "Guns Menu");
     AddMenuOption(menu,"cycle","Cycle through");
     if (
