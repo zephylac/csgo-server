@@ -450,7 +450,7 @@ public void WeaponAllocator(ArrayList tPlayers, ArrayList ctPlayers, Bombsite bo
         primary = "";
         if (!isPistolRound)
         {
-            if (!isPistolRound)
+            if (!isPmRound)
             {
                 int randGiveAwp = GetRandomInt(0, 1);
 
