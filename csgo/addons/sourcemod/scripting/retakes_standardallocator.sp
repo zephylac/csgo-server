@@ -789,8 +789,19 @@ public bool getkit(bool mimicCompetitivePistolRounds, bool isPistolRound)
     return kit;
 }
 
-public void GivePistolMenuCT(int client) {
-    Handle menu = CreateMenu(MenuHandler_PISTOL_CT);
+// GivePistolMenuCT -> GivePistolMenuT -> End || GivePmMenuCT
+// GivePmMenuCT -> GivePmMenuT -> End || GiveRifleMenuCT
+// GiveRifleMenuCT -> GiveRifleMenuT -> End || GiveAwpMenu
+// GiveAwpMenu -> End || GiveScoutMenu
+// GiveScoutMenu -> End
+
+public void GivePistolMenuCT(int client, bool isCycle) {
+    Handle menu;
+    if (isCycle) {
+        menu = CreateMenu(MenuHandler_PISTOL_CT_CYCLE);
+    } else {
+        menu = CreateMenu(MenuHandler_PISTOL_CT);
+    }
     SetMenuTitle(menu, "Select a CT pistol:");
     AddMenuInt(menu, pistol_choice_ct_hkp2000, "P2000");
     AddMenuInt(menu, pistol_choice_ct_usp, "USP-S");
@@ -807,8 +818,37 @@ public void GivePistolMenuCT(int client) {
     DisplayMenu(menu, client, MENU_TIME_LENGTH);
 }
 
-public void GivePistolMenuT(int client) {
-    Handle menu = CreateMenu(MenuHandler_PISTOL_T);
+public int MenuHandler_PISTOL_CT(Handle menu, MenuAction action, int param1, int param2) {
+    if (action == MenuAction_Select) {
+        int client = param1;
+        int gunchoice = GetMenuInt(menu, param2);
+        g_PistolchoiceCT[client] = gunchoice;
+        SetCookieInt(client, g_hGUNChoiceCookieCT, gunchoice);
+        GivePistolMenuT(client, false);
+    } else if (action == MenuAction_End) {
+        CloseHandle(menu);
+    }
+}
+
+public int MenuHandler_PISTOL_CT_CYCLE(Handle menu, MenuAction action, int param1, int param2) {
+    if (action == MenuAction_Select) {
+        int client = param1;
+        int gunchoice = GetMenuInt(menu, param2);
+        g_PistolchoiceCT[client] = gunchoice;
+        SetCookieInt(client, g_hGUNChoiceCookieCT, gunchoice);
+        GivePistolMenuT(client, false);
+    } else if (action == MenuAction_End) {
+        CloseHandle(menu);
+    }
+}
+
+public void GivePistolMenuT(int client, bool isCycle) {
+    Handle menu;
+    if (isCycle) {
+        menu = CreateMenu(MenuHandler_PISTOL_T_CYCLE);
+    } else {
+        menu = CreateMenu(MenuHandler_PISTOL_T);
+    }
     SetMenuTitle(menu, "Select a T pistol:");
     AddMenuInt(menu, pistol_choice_t_glock, "Glock");
     if (GetConVarInt(g_h_sm_retakes_weapon_p250_enabled) == 1)
@@ -824,17 +864,6 @@ public void GivePistolMenuT(int client) {
     DisplayMenu(menu, client, MENU_TIME_LENGTH);
 }
 
-public int MenuHandler_PISTOL_CT(Handle menu, MenuAction action, int param1, int param2) {
-    if (action == MenuAction_Select) {
-        int client = param1;
-        int gunchoice = GetMenuInt(menu, param2);
-        g_PistolchoiceCT[client] = gunchoice;
-        SetCookieInt(client, g_hGUNChoiceCookieCT, gunchoice);
-    } else if (action == MenuAction_End) {
-        CloseHandle(menu);
-    }
-}
-
 public int MenuHandler_PISTOL_T(Handle menu, MenuAction action, int param1, int param2) {
     if (action == MenuAction_Select) {
         int client = param1;
@@ -846,8 +875,25 @@ public int MenuHandler_PISTOL_T(Handle menu, MenuAction action, int param1, int 
     }
 }
 
-public void GivePmMenuCT(int client) {
-    Handle menu = CreateMenu(MenuHandler_PM_CT);
+public int MenuHandler_PISTOL_T_CYCLE(Handle menu, MenuAction action, int param1, int param2) {
+    if (action == MenuAction_Select) {
+        int client = param1;
+        int gunchoice = GetMenuInt(menu, param2);
+        g_PistolchoiceT[client] = gunchoice;
+        SetCookieInt(client, g_hGUNChoiceCookieT, gunchoice);
+        GivePmMenuCT(client,true);
+    } else if (action == MenuAction_End) {
+        CloseHandle(menu);
+    }
+}
+
+public void GivePmMenuCT(int client, bool isCycle) {
+    Handle menu;
+    if (isCycle) {
+        menu = CreateMenu(MenuHandler_PM_CT_CYCLE);
+    } else {
+        menu = CreateMenu(MenuHandler_PM_CT);
+    }
     SetMenuTitle(menu, "Select a CT pm:");
     if (GetConVarInt(g_h_sm_retakes_weapon_mp9_enabled) == 1)
         AddMenuInt(menu, pm_choice_ct_mp9, "MP9");
@@ -864,8 +910,37 @@ public void GivePmMenuCT(int client) {
     DisplayMenu(menu, client, MENU_TIME_LENGTH);
 }
 
-public void GivePmMenuT(int client) {
-    Handle menu = CreateMenu(MenuHandler_PM_T);
+public int MenuHandler_PM_CT(Handle menu, MenuAction action, int param1, int param2) {
+    if (action == MenuAction_Select) {
+        int client = param1;
+        int gunchoice = GetMenuInt(menu, param2);
+        g_PmChoiceCT[client] = gunchoice;
+        SetCookieInt(client, g_hPmChoiceCookieCT, gunchoice);
+        GivePmMenuT(client, false);
+    } else if (action == MenuAction_End) {
+        CloseHandle(menu);
+    }
+}
+
+public int MenuHandler_PM_CT_CYCLE(Handle menu, MenuAction action, int param1, int param2) {
+    if (action == MenuAction_Select) {
+        int client = param1;
+        int gunchoice = GetMenuInt(menu, param2);
+        g_PmChoiceCT[client] = gunchoice;
+        SetCookieInt(client, g_hPmChoiceCookieCT, gunchoice);
+        GivePmMenuT(client, true);
+    } else if (action == MenuAction_End) {
+        CloseHandle(menu);
+    }
+}
+
+public void GivePmMenuT(int client, bool isCycle) {
+    Handle menu;
+    if (isCycle) {
+        menu = CreateMenu(MenuHandler_PM_T_CYCLE);
+    } else {
+        menu = CreateMenu(MenuHandler_PM_T);
+    }
     SetMenuTitle(menu, "Select a T pm:");
     if (GetConVarInt(g_h_sm_retakes_weapon_mac10_enabled) == 1)
         AddMenuInt(menu, pm_choice_t_mac10, "MAC10");
@@ -882,17 +957,6 @@ public void GivePmMenuT(int client) {
     DisplayMenu(menu, client, MENU_TIME_LENGTH);
 }
 
-public int MenuHandler_PM_CT(Handle menu, MenuAction action, int param1, int param2) {
-    if (action == MenuAction_Select) {
-        int client = param1;
-        int gunchoice = GetMenuInt(menu, param2);
-        g_PmChoiceCT[client] = gunchoice;
-        SetCookieInt(client, g_hPmChoiceCookieCT, gunchoice);
-    } else if (action == MenuAction_End) {
-        CloseHandle(menu);
-    }
-}
-
 public int MenuHandler_PM_T(Handle menu, MenuAction action, int param1, int param2) {
     if (action == MenuAction_Select) {
         int client = param1;
@@ -904,22 +968,30 @@ public int MenuHandler_PM_T(Handle menu, MenuAction action, int param1, int para
     }
 }
 
-public void GiveWeaponMenuCT(int client) {
-    Handle menu = CreateMenu(MenuHandler_RIFLE_CT);
+public int MenuHandler_PM_T_CYCLE(Handle menu, MenuAction action, int param1, int param2) {
+    if (action == MenuAction_Select) {
+        int client = param1;
+        int gunchoice = GetMenuInt(menu, param2);
+        g_PmChoiceT[client] = gunchoice;
+        SetCookieInt(client, g_hPmChoiceCookieT, gunchoice);
+        GiveRifleMenuCT(client, true);
+    } else if (action == MenuAction_End) {
+        CloseHandle(menu);
+    }
+}
+
+public void GiveRifleMenuCT(int client, bool isCycle) {
+    Handle menu;
+    if (isCycle) {
+        menu = CreateMenu(MenuHandler_RIFLE_CT_CYCLE);
+    } else {
+        menu = CreateMenu(MenuHandler_RIFLE_CT);
+    }
     SetMenuTitle(menu, "Select a CT rifle:");
     AddMenuInt(menu, rifle_choice_ct_famas, "Famas");
     AddMenuInt(menu, rifle_choice_ct_m4a4, "M4A4");
     AddMenuInt(menu, rifle_choice_ct_m4a1_s, "M4A1-S");
     AddMenuInt(menu, rifle_choice_ct_aug, "Aug");
-    DisplayMenu(menu, client, MENU_TIME_LENGTH);
-}
-
-public void GiveWeaponMenuT(int client) {
-    Handle menu = CreateMenu(MenuHandler_RIFLE_T);
-    SetMenuTitle(menu, "Select a T rifle:");
-    AddMenuInt(menu, rifle_choice_t_galil, "Galil");
-    AddMenuInt(menu, rifle_choice_t_ak47, "AK47");
-    AddMenuInt(menu, rifle_choice_t_sg553, "SG553");
     DisplayMenu(menu, client, MENU_TIME_LENGTH);
 }
 
@@ -929,9 +1001,36 @@ public int MenuHandler_RIFLE_CT(Handle menu, MenuAction action, int param1, int 
         int riflechoice = GetMenuInt(menu, param2);
         g_RifleChoiceCT[client] = riflechoice;
         SetCookieInt(client, g_hRifleChoiceCookieCT, riflechoice);
+        GiveRifleMenuT(client, false);
     } else if (action == MenuAction_End) {
         CloseHandle(menu);
     }
+}
+
+public int MenuHandler_RIFLE_CT_CYCLE(Handle menu, MenuAction action, int param1, int param2) {
+    if (action == MenuAction_Select) {
+        int client = param1;
+        int riflechoice = GetMenuInt(menu, param2);
+        g_RifleChoiceCT[client] = riflechoice;
+        SetCookieInt(client, g_hRifleChoiceCookieCT, riflechoice);
+        GiveRifleMenuT(client, true);
+    } else if (action == MenuAction_End) {
+        CloseHandle(menu);
+    }
+}
+
+public void GiveRifleMenuT(int client, bool isCycle) {
+    Handle menu;
+    if (isCycle) {
+        menu = CreateMenu(MenuHandler_RIFLE_T_CYCLE);
+    } else {
+        menu = CreateMenu(MenuHandler_RIFLE_T);
+    }
+    SetMenuTitle(menu, "Select a T rifle:");
+    AddMenuInt(menu, rifle_choice_t_galil, "Galil");
+    AddMenuInt(menu, rifle_choice_t_ak47, "AK47");
+    AddMenuInt(menu, rifle_choice_t_sg553, "SG553");
+    DisplayMenu(menu, client, MENU_TIME_LENGTH);
 }
 
 public int MenuHandler_RIFLE_T(Handle menu, MenuAction action, int param1, int param2) {
@@ -945,8 +1044,27 @@ public int MenuHandler_RIFLE_T(Handle menu, MenuAction action, int param1, int p
     }
 }
 
-public void GiveAwpMenu(int client) {
-    Handle menu = CreateMenu(MenuHandler_AWP);
+public int MenuHandler_RIFLE_T_CYCLE(Handle menu, MenuAction action, int param1, int param2) {
+    if (action == MenuAction_Select) {
+        int client = param1;
+        int riflechoice = GetMenuInt(menu, param2);
+        g_RifleChoiceT[client] = riflechoice;
+        SetCookieInt(client, g_hRifleChoiceCookieT, riflechoice);
+        if (GetConVarInt(g_h_sm_retakes_weapon_awp_team_max) > 0) {
+            GiveAwpMenu(client, true);
+        }
+    } else if (action == MenuAction_End) {
+        CloseHandle(menu);
+    }
+}
+
+public void GiveAwpMenu(int client, bool isCycle) {
+    Handle menu;
+    if (isCycle) {
+        menu = CreateMenu(MenuHandler_AWP);
+    } else {
+        menu = CreateMenu(MenuHandler_AWP_CYCLE);
+    }
     SetMenuTitle(menu, "Allow yourself to receive AWPs?");
     AddMenuBool(menu, true, "Yes");
     AddMenuBool(menu, false, "No");
@@ -959,6 +1077,20 @@ public int MenuHandler_AWP(Handle menu, MenuAction action, int param1, int param
         bool allowAwps = GetMenuBool(menu, param2);
         g_AwpChoice[client] = allowAwps;
         SetCookieBool(client, g_hAwpChoiceCookie, allowAwps);   
+    } else if (action == MenuAction_End) {
+        CloseHandle(menu);
+    }
+}
+
+public int MenuHandler_AWP_CYCLE(Handle menu, MenuAction action, int param1, int param2) {
+    if (action == MenuAction_Select) {
+        int client = param1;
+        bool allowAwps = GetMenuBool(menu, param2);
+        g_AwpChoice[client] = allowAwps;
+        SetCookieBool(client, g_hAwpChoiceCookie, allowAwps);
+        if (GetConVarInt(g_h_sm_retakes_weapon_scout_team_max) > 0) {
+            GiveScoutMenu(client);
+        }
     } else if (action == MenuAction_End) {
         CloseHandle(menu);
     }
@@ -1031,10 +1163,8 @@ public int MenuHandler_WEAPON(Handle menu, MenuAction action, int param1, int pa
                 GetConVarInt(g_h_sm_retakes_weapon_deagle_enabled) != 1 && 
                 GetConVarInt(g_h_sm_retakes_weapon_r8_enabled) != 1)
             ) {
-                GivePistolMenuCT(client);
-                GivePistolMenuT(client);
-            }
-            if (
+                GivePistolMenuCT(client, true);
+            } else if (
                 !(GetConVarInt(g_h_sm_retakes_weapon_mp9_enabled) != 1 && 
                 GetConVarInt(g_h_sm_retakes_weapon_mp5sd_enabled) != 1 &&
                 GetConVarInt(g_h_sm_retakes_weapon_mp7_enabled) != 1 && 
@@ -1043,28 +1173,18 @@ public int MenuHandler_WEAPON(Handle menu, MenuAction action, int param1, int pa
                 GetConVarInt(g_h_sm_retakes_weapon_mac10_enabled) != 1 && 
                 GetConVarInt(g_h_sm_retakes_weapon_p90_enabled) != 1)
             ) {
-                GivePmMenuCT(client);
-                GivePmMenuT(client);
-            }
-            GiveWeaponMenuCT(client);
-            GiveWeaponMenuT(client);
-            if (GetConVarInt(g_h_sm_retakes_weapon_awp_team_max) > 0) {
-                GiveAwpMenu(client);
-            }
-            if (GetConVarInt(g_h_sm_retakes_weapon_scout_team_max) > 0) {
-                GiveScoutMenu(client);
-            }
+                GivePmMenuCT(client, true);
+            } else {
+                GiveRifleMenuCT(client, true);
+            }       
         } else if (StrEqual(choice, "pistol")) {
-           GivePistolMenuCT(client);
-           GivePistolMenuT(client);
+           GivePistolMenuCT(client, false);
         } else if (StrEqual(choice, "pm")) {
-            GivePmMenuCT(client);
-            GivePmMenuT(client);
+            GivePmMenuCT(client, false);
         } else if (StrEqual(choice, "rifle")) {
-            GiveWeaponMenuCT(client);
-            GiveWeaponMenuT(client);
+            GiveRifleMenuCT(client, false);
         } else if (StrEqual(choice, "awp")) {
-            GiveAwpMenu(client);
+            GiveAwpMenu(client, false);
         } else if (StrEqual(choice, "scout")) {
             GiveScoutMenu(client);
         } else {
