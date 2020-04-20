@@ -830,7 +830,6 @@ public int MenuHandler_PISTOL_CT(Handle menu, MenuAction action, int param1, int
         int gunchoice = GetMenuInt(menu, param2);
         g_PistolchoiceCT[client] = gunchoice;
         SetCookieInt(client, g_hGUNChoiceCookieCT, gunchoice);
-        CloseHandle(menu);
     } else if (action == MenuAction_End) {
         CloseHandle(menu);
     }
@@ -842,7 +841,6 @@ public int MenuHandler_PISTOL_T(Handle menu, MenuAction action, int param1, int 
         int gunchoice = GetMenuInt(menu, param2);
         g_PistolchoiceT[client] = gunchoice;
         SetCookieInt(client, g_hGUNChoiceCookieT, gunchoice);
-        CloseHandle(menu);
     } else if (action == MenuAction_End) {
         CloseHandle(menu);
     }
@@ -890,7 +888,6 @@ public int MenuHandler_PM_CT(Handle menu, MenuAction action, int param1, int par
         int gunchoice = GetMenuInt(menu, param2);
         g_PmChoiceCT[client] = gunchoice;
         SetCookieInt(client, g_hPmChoiceCookieCT, gunchoice);
-        CloseHandle(menu);
     } else if (action == MenuAction_End) {
         CloseHandle(menu);
     }
@@ -902,7 +899,6 @@ public int MenuHandler_PM_T(Handle menu, MenuAction action, int param1, int para
         int gunchoice = GetMenuInt(menu, param2);
         g_PmChoiceT[client] = gunchoice;
         SetCookieInt(client, g_hPmChoiceCookieT, gunchoice);
-        CloseHandle(menu);
     } else if (action == MenuAction_End) {
         CloseHandle(menu);
     }
@@ -933,7 +929,6 @@ public int MenuHandler_RIFLE_CT(Handle menu, MenuAction action, int param1, int 
         int riflechoice = GetMenuInt(menu, param2);
         g_RifleChoiceCT[client] = riflechoice;
         SetCookieInt(client, g_hRifleChoiceCookieCT, riflechoice);
-        CloseHandle(menu);
     } else if (action == MenuAction_End) {
         CloseHandle(menu);
     }
@@ -945,7 +940,6 @@ public int MenuHandler_RIFLE_T(Handle menu, MenuAction action, int param1, int p
         int riflechoice = GetMenuInt(menu, param2);
         g_RifleChoiceT[client] = riflechoice;
         SetCookieInt(client, g_hRifleChoiceCookieT, riflechoice);
-        CloseHandle(menu);
     } else if (action == MenuAction_End) {
         CloseHandle(menu);
     }
@@ -964,8 +958,7 @@ public int MenuHandler_AWP(Handle menu, MenuAction action, int param1, int param
         int client = param1;
         bool allowAwps = GetMenuBool(menu, param2);
         g_AwpChoice[client] = allowAwps;
-        SetCookieBool(client, g_hAwpChoiceCookie, allowAwps);
-        CloseHandle(menu);    
+        SetCookieBool(client, g_hAwpChoiceCookie, allowAwps);   
     } else if (action == MenuAction_End) {
         CloseHandle(menu);
     }
@@ -985,7 +978,6 @@ public int MenuHandler_SCOUT(Handle menu, MenuAction action, int param1, int par
         bool allowScouts = GetMenuBool(menu, param2);
         g_ScoutChoice[client] = allowScouts;
         SetCookieBool(client, g_hScoutChoiceCookie, allowScouts);
-        CloseHandle(menu);
     } else if (action == MenuAction_End) {
         CloseHandle(menu);
     }
