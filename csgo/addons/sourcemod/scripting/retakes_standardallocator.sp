@@ -996,22 +996,22 @@ public void GiveWeaponMenu(int client) {
     SetMenuTitle(menu, "Guns Menu");
     AddMenuOption(menu,"cycle","Cycle through");
     if (
-        GetConVarInt(g_h_sm_retakes_weapon_p250_enabled) != 1 && 
+        !(GetConVarInt(g_h_sm_retakes_weapon_p250_enabled) != 1 && 
         GetConVarInt(g_h_sm_retakes_weapon_tec9_fiveseven_enabled) != 1 &&
         GetConVarInt(g_h_sm_retakes_weapon_cz_enabled) != 1 && 
         GetConVarInt(g_h_sm_retakes_weapon_deagle_enabled) != 1 && 
-        GetConVarInt(g_h_sm_retakes_weapon_r8_enabled) != 1
+        GetConVarInt(g_h_sm_retakes_weapon_r8_enabled) != 1)
     ) {
         AddMenuOption(menu,"pistol","Pistol");
     }
     if (
-        GetConVarInt(g_h_sm_retakes_weapon_mp9_enabled) != 1 && 
+        !(GetConVarInt(g_h_sm_retakes_weapon_mp9_enabled) != 1 && 
         GetConVarInt(g_h_sm_retakes_weapon_mp5sd_enabled) != 1 &&
         GetConVarInt(g_h_sm_retakes_weapon_mp7_enabled) != 1 && 
         GetConVarInt(g_h_sm_retakes_weapon_ump45_enabled) != 1 &&
         GetConVarInt(g_h_sm_retakes_weapon_bizon_enabled) != 1 && 
         GetConVarInt(g_h_sm_retakes_weapon_mac10_enabled) != 1 && 
-        GetConVarInt(g_h_sm_retakes_weapon_p90_enabled) != 1
+        GetConVarInt(g_h_sm_retakes_weapon_p90_enabled) != 1)
     ) {
     AddMenuOption(menu,"pm","PM");
     }
@@ -1033,32 +1033,35 @@ public int MenuHandler_WEAPON(Handle menu, MenuAction action, int param1, int pa
         
         if (StrEqual(choice, "cycle")) {
             if (
-                GetConVarInt(g_h_sm_retakes_weapon_p250_enabled) != 1 && 
+                !(GetConVarInt(g_h_sm_retakes_weapon_p250_enabled) != 1 && 
                 GetConVarInt(g_h_sm_retakes_weapon_tec9_fiveseven_enabled) != 1 &&
                 GetConVarInt(g_h_sm_retakes_weapon_cz_enabled) != 1 && 
                 GetConVarInt(g_h_sm_retakes_weapon_deagle_enabled) != 1 && 
-                GetConVarInt(g_h_sm_retakes_weapon_r8_enabled) != 1
+                GetConVarInt(g_h_sm_retakes_weapon_r8_enabled) != 1)
             ) {
                 GivePistolMenuCT(client);
                 GivePistolMenuT(client);
             }
             if (
-                GetConVarInt(g_h_sm_retakes_weapon_mp9_enabled) != 1 && 
+                !(GetConVarInt(g_h_sm_retakes_weapon_mp9_enabled) != 1 && 
                 GetConVarInt(g_h_sm_retakes_weapon_mp5sd_enabled) != 1 &&
                 GetConVarInt(g_h_sm_retakes_weapon_mp7_enabled) != 1 && 
                 GetConVarInt(g_h_sm_retakes_weapon_ump45_enabled) != 1 &&
                 GetConVarInt(g_h_sm_retakes_weapon_bizon_enabled) != 1 && 
                 GetConVarInt(g_h_sm_retakes_weapon_mac10_enabled) != 1 && 
-                GetConVarInt(g_h_sm_retakes_weapon_p90_enabled) != 1
+                GetConVarInt(g_h_sm_retakes_weapon_p90_enabled) != 1)
             ) {
                 GivePmMenuCT(client);
                 GivePmMenuT(client);
             }
             GiveWeaponMenuCT(client);
             GiveWeaponMenuT(client);
-            GiveAwpMenu(client);
-            GiveScoutMenu(client);
-
+            if (GetConVarInt(g_h_sm_retakes_weapon_awp_team_max) > 0) {
+                GiveAwpMenu(client);
+            }
+            if (GetConVarInt(g_h_sm_retakes_weapon_scout_team_max) > 0) {
+                GiveScoutMenu(client);
+            }
         } else if (StrEqual(choice, "pistol")) {
            GivePistolMenuCT(client);
            GivePistolMenuT(client);
