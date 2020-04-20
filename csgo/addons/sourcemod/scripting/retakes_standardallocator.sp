@@ -8,6 +8,7 @@
 #pragma newdecls required
 
 #define MENU_TIME_LENGTH 15
+#define BOOLSTRING(%1) ((%1) == true ? "Yes" : "No")
 
 const int money_for_competitive_pistol_round = 800;
 
@@ -836,7 +837,7 @@ public int MenuHandler_PISTOL_CT_CYCLE(Handle menu, MenuAction action, int param
         int gunchoice = GetMenuInt(menu, param2);
         g_PistolchoiceCT[client] = gunchoice;
         SetCookieInt(client, g_hGUNChoiceCookieCT, gunchoice);
-        GivePistolMenuT(client, false);
+        GivePistolMenuT(client, true);
     } else if (action == MenuAction_End) {
         CloseHandle(menu);
     }
@@ -1061,9 +1062,9 @@ public int MenuHandler_RIFLE_T_CYCLE(Handle menu, MenuAction action, int param1,
 public void GiveAwpMenu(int client, bool isCycle) {
     Handle menu;
     if (isCycle) {
-        menu = CreateMenu(MenuHandler_AWP);
-    } else {
         menu = CreateMenu(MenuHandler_AWP_CYCLE);
+    } else {
+        menu = CreateMenu(MenuHandler_AWP);
     }
     SetMenuTitle(menu, "Allow yourself to receive AWPs?");
     AddMenuBool(menu, true, "Yes");
@@ -1141,10 +1142,10 @@ public void GiveWeaponMenu(int client) {
     }
     AddMenuOption(menu,"rifle","Rifle");
     if (GetConVarInt(g_h_sm_retakes_weapon_awp_team_max) > 0) {
-        AddMenuOption(menu,"awp","AWP");
+        AddMenuOption(menu, "awp", "Receive AWP: %s", BOOLSTRING(g_hAwpChoiceCookie));
     }
     if (GetConVarInt(g_h_sm_retakes_weapon_scout_team_max) > 0) {
-        AddMenuOption(menu,"scout","Scout");
+        AddMenuOption(menu, "scout", "Receive scout: %s", BOOLSTRING(g_hScoutChoiceCookie));
     }
     DisplayMenu(menu, client, MENU_TIME_LENGTH);
 }
@@ -1184,9 +1185,14 @@ public int MenuHandler_WEAPON(Handle menu, MenuAction action, int param1, int pa
         } else if (StrEqual(choice, "rifle")) {
             GiveRifleMenuCT(client, false);
         } else if (StrEqual(choice, "awp")) {
-            GiveAwpMenu(client, false);
+            g_AwpChoice[client] = !g_AwpChoice[client];
+            SetCookieBool(client, g_hAwpChoiceCookie, g_AwpChoice[client]);
+            GiveWeaponMenu(client);
         } else if (StrEqual(choice, "scout")) {
-            GiveScoutMenu(client);
+            g_ScoutChoice[client] = !g_ScoutChoice[client];
+            SetCookieBool(client, g_hScoutChoiceCookie, g_ScoutChoice[client]);
+            GiveWeaponMenu(client);
+
         } else {
             LogError("unknown menu info string = %s", choice);
         }
